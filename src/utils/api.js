@@ -76,7 +76,7 @@ export const authenticate = async (credentials) => {
     if (response.success) {
       // Store session info securely
       const sessionData = {
-        token: response.token,
+        token: response.token + '_' + credentials.userId,
         userId: credentials.userId,
         timestamp: Date.now(),
       };
