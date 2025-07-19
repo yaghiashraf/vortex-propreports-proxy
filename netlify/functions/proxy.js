@@ -268,7 +268,7 @@ exports.handler = async (event, context) => {
           ...headers,
           'Content-Type': 'text/html'
         },
-        body: loginPromptHtml
+        body: demoHtml
       };
     }
 

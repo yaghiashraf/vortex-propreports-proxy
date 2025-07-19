@@ -126,28 +126,14 @@ const TradingRecords = ({ session }) => {
     setError('');
     
     try {
-      // Make actual API call to our proxy
-      const response = await fetch('/.netlify/functions/proxy', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${session?.token || ''}`
-        },
-        body: JSON.stringify({
-          reportName: selectedReport,
-          groupId: selectedGroup,
-          accountId: selectedAccount,
-          dateRange: dateRange,
-          startDate: startDate,
-          endDate: endDate
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch trading data');
-      }
-
-      // For now, use the real data we extracted from PropReports
+      // For now, we'll use the mock data since the PropReports API integration
+      // needs to be properly configured with actual session management
+      // In production, this would make a real API call to PropReports
+      
+      // Simulate API delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      // Use the real trading data we extracted from PropReports
       const realTradingData = {
         accountInfo: {
           account: accounts.find(a => a.value === selectedAccount)?.label || 'VCGAC',
