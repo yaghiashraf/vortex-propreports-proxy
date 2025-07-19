@@ -1,19 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import PropReportsDashboard from './PropReportsDashboard';
 import '../styles/vortex-theme.css';
 
 const Dashboard = ({ session, onLogout }) => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-  const [iframeKey, setIframeKey] = useState(0);
-
-  useEffect(() => {
-    // Simulate loading time for iframe content
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-
-    return () => clearTimeout(timer);
-  }, []);
+  const [activeTab, setActiveTab] = useState('reports');
 
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
@@ -21,27 +11,25 @@ const Dashboard = ({ session, onLogout }) => {
     }
   };
 
-  const refreshContent = () => {
-    setIsLoading(true);
-    setIframeKey(prev => prev + 1);
-    setTimeout(() => setIsLoading(false), 2000);
-  };
+  const tabs = [
+    { id: 'reports', label: 'Reports', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 00-2-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
+    { id: 'search', label: 'Search', icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
+    { id: 'profile', label: 'Profile', icon: 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z' }
+  ];
 
   return (
-    <div style={{ 
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'
-    }}>
-      {/* Modern Header Navigation */}
+    <div className="vortex-dashboard-container">
+      {/* Header Navigation */}
       <nav className="vortex-nav">
         <div className="vortex-container">
           <div className="vortex-flex vortex-items-center vortex-justify-between">
+            {/* Logo and Brand */}
             <div className="vortex-flex vortex-items-center">
               <div>
                 <h1 style={{ 
                   fontSize: 'var(--vortex-font-size-2xl)',
                   fontWeight: '700',
-                  color: 'var(--vortex-primary)',
+                  color: 'var(--vortex-text-primary)',
                   margin: 0,
                   background: 'linear-gradient(135deg, var(--vortex-primary) 0%, #1e40af 100%)',
                   WebkitBackgroundClip: 'text',
@@ -53,22 +41,49 @@ const Dashboard = ({ session, onLogout }) => {
                 <p style={{ 
                   margin: 0,
                   fontSize: 'var(--vortex-font-size-sm)',
-                  color: 'var(--vortex-gray-600)',
+                  color: 'var(--vortex-text-muted)',
                   fontWeight: '500'
                 }}>
-                  PropReports Dashboard
+                  PropReports Portal
                 </p>
               </div>
             </div>
+
+            {/* Navigation Tabs */}
+            <div className="vortex-flex vortex-items-center" style={{ gap: '4px' }}>
+              {tabs.map(tab => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`vortex-btn ${activeTab === tab.id ? 'vortex-btn-primary' : 'vortex-btn-secondary'}`}
+                  style={{ 
+                    padding: '10px 16px', 
+                    fontSize: '14px',
+                    minHeight: 'auto'
+                  }}
+                >
+                  <svg 
+                    style={{ width: '16px', height: '16px', marginRight: '6px' }}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={tab.icon} />
+                  </svg>
+                  {tab.label}
+                </button>
+              ))}
+            </div>
             
+            {/* User Info and Actions */}
             <div className="vortex-flex vortex-items-center" style={{ gap: '12px' }}>
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                background: 'var(--vortex-gray-50)',
+                background: 'var(--vortex-bg-surface)',
                 padding: '8px 12px',
                 borderRadius: 'var(--vortex-radius-lg)',
-                border: '1px solid var(--vortex-gray-200)'
+                border: '1px solid var(--vortex-border-primary)'
               }}>
                 <div style={{
                   width: '8px',
@@ -80,32 +95,12 @@ const Dashboard = ({ session, onLogout }) => {
                 }}></div>
                 <span style={{ 
                   fontSize: 'var(--vortex-font-size-sm)',
-                  color: 'var(--vortex-gray-700)',
+                  color: 'var(--vortex-text-primary)',
                   fontWeight: '600'
                 }}>
                   {session?.userId || 'VCGMGR'}
                 </span>
               </div>
-              
-              <button 
-                onClick={refreshContent}
-                className="vortex-btn vortex-btn-secondary"
-                style={{ 
-                  padding: '10px 16px', 
-                  fontSize: '14px',
-                  minHeight: 'auto'
-                }}
-              >
-                <svg 
-                  style={{ width: '16px', height: '16px', marginRight: '6px' }}
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Refresh
-              </button>
               
               <button 
                 onClick={handleLogout}
@@ -133,124 +128,148 @@ const Dashboard = ({ session, onLogout }) => {
 
       {/* Main Content */}
       <main className="vortex-container" style={{ 
-        paddingTop: 'var(--vortex-spacing-8)', 
+        paddingTop: 'var(--vortex-spacing-6)', 
         paddingBottom: 'var(--vortex-spacing-8)' 
       }}>
-        {error && (
-          <div className="vortex-alert vortex-alert-error vortex-mb-6">
-            <strong>Connection Error:</strong> {error}
+        {/* Tab Content */}
+        {activeTab === 'reports' && (
+          <PropReportsDashboard session={session} />
+        )}
+
+        {activeTab === 'search' && (
+          <div className="vortex-reports-container">
+            <div className="vortex-reports-header">
+              <h2 className="vortex-heading-3">Search Executions</h2>
+            </div>
+            
+            <div className="vortex-form-grid">
+              <div className="vortex-form-group">
+                <label className="vortex-label">Symbol</label>
+                <input 
+                  type="text"
+                  className="vortex-input"
+                  placeholder="Enter symbol (e.g., AAPL, TSLA)"
+                />
+              </div>
+              
+              <div className="vortex-form-group">
+                <label className="vortex-label">Trade Type</label>
+                <select className="vortex-select">
+                  <option value="">All</option>
+                  <option value="1">All Buys</option>
+                  <option value="2">All Sells</option>
+                  <option value="B">Buy</option>
+                  <option value="C">Cover</option>
+                  <option value="S">Sell</option>
+                  <option value="T">Short</option>
+                </select>
+              </div>
+              
+              <div className="vortex-form-group">
+                <label className="vortex-label">Quantity</label>
+                <input 
+                  type="number"
+                  className="vortex-input"
+                  placeholder="Minimum quantity"
+                />
+              </div>
+              
+              <div className="vortex-form-group">
+                <label className="vortex-label">Price Range</label>
+                <input 
+                  type="text"
+                  className="vortex-input"
+                  placeholder="e.g., 100-200"
+                />
+              </div>
+            </div>
+            
+            <button className="vortex-btn vortex-btn-primary">
+              <svg 
+                style={{ width: '20px', height: '20px', marginRight: '8px' }}
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              Search Executions
+            </button>
+
+            <div className="vortex-text-center" style={{ marginTop: '60px' }}>
+              <p className="vortex-text">Enter search criteria and click "Search Executions" to find specific trades.</p>
+            </div>
           </div>
         )}
 
-        {/* Modern Dashboard Card */}
-        <div className="vortex-dashboard-content">
-          {/* Dashboard Header */}
-          <div className="vortex-dashboard-header">
-            <div className="vortex-flex vortex-items-center vortex-justify-between">
-              <div>
-                <h2 style={{ 
-                  fontSize: 'var(--vortex-font-size-xl)',
-                  fontWeight: '600',
-                  margin: 0,
-                  marginBottom: '4px'
-                }}>
-                  🔒 Secure PropReports Access
-                </h2>
-                <p style={{ 
-                  margin: 0,
-                  opacity: 0.9,
-                  fontSize: 'var(--vortex-font-size-sm)'
-                }}>
-                  Live trading data and account management
-                </p>
+        {activeTab === 'profile' && (
+          <div className="vortex-reports-container">
+            <div className="vortex-reports-header">
+              <h2 className="vortex-heading-3">User Profile</h2>
+            </div>
+            
+            <div className="vortex-stats-grid">
+              <div className="vortex-stat-card">
+                <span className="vortex-stat-value">VCGMGR</span>
+                <span className="vortex-stat-label">User ID</span>
               </div>
-              <div style={{
-                display: 'flex',
-                alignItems: 'center',
-                background: 'rgba(255, 255, 255, 0.2)',
-                padding: '8px 16px',
+              <div className="vortex-stat-card">
+                <span className="vortex-stat-value">Active</span>
+                <span className="vortex-stat-label">Account Status</span>
+              </div>
+              <div className="vortex-stat-card">
+                <span className="vortex-stat-value">3</span>
+                <span className="vortex-stat-label">Groups</span>
+              </div>
+              <div className="vortex-stat-card">
+                <span className="vortex-stat-value">60+</span>
+                <span className="vortex-stat-label">Accounts</span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '40px' }}>
+              <h4 className="vortex-heading-3" style={{ fontSize: 'var(--vortex-font-size-lg)' }}>
+                Account Access
+              </h4>
+              <p className="vortex-text">
+                You have access to multiple Vortex Capital Group trading accounts across different groups.
+                Use the Reports tab to generate detailed trading reports and analyze performance.
+              </p>
+              
+              <div style={{ 
+                background: 'var(--vortex-bg-surface)',
+                padding: 'var(--vortex-spacing-4)',
                 borderRadius: 'var(--vortex-radius-lg)',
-                backdropFilter: 'blur(10px)'
+                border: '1px solid var(--vortex-border-primary)',
+                marginTop: '20px'
               }}>
-                <svg 
-                  style={{ width: '20px', height: '20px', marginRight: '8px' }}
-                  fill="currentColor" 
-                  viewBox="0 0 20 20"
-                >
-                  <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span style={{ fontWeight: '600', fontSize: 'var(--vortex-font-size-sm)' }}>
-                  Session Active
-                </span>
+                <div className="vortex-flex vortex-items-center vortex-mb-2">
+                  <svg 
+                    style={{ width: '20px', height: '20px', marginRight: '8px', color: 'var(--vortex-success)' }}
+                    fill="currentColor" 
+                    viewBox="0 0 20 20"
+                  >
+                    <path fillRule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                  <span style={{ fontWeight: '600', color: 'var(--vortex-text-primary)', fontSize: 'var(--vortex-font-size-sm)' }}>
+                    Secure Connection
+                  </span>
+                </div>
+                <p className="vortex-text-sm" style={{ margin: 0 }}>
+                  Your session is securely connected to PropReports. All data is transmitted using encrypted connections.
+                </p>
               </div>
             </div>
           </div>
+        )}
 
-          {/* Loading Overlay */}
-          {isLoading && (
-            <div style={{ 
-              padding: 'var(--vortex-spacing-8)',
-              textAlign: 'center',
-              background: 'var(--vortex-white)'
-            }}>
-              <div className="vortex-flex vortex-items-center vortex-justify-center vortex-flex-col" style={{ gap: '20px' }}>
-                <div style={{
-                  width: '60px',
-                  height: '60px',
-                  border: '4px solid var(--vortex-gray-200)',
-                  borderTop: '4px solid var(--vortex-primary)',
-                  borderRadius: '50%',
-                  animation: 'spin 1s linear infinite'
-                }}></div>
-                <div>
-                  <h3 style={{ 
-                    margin: 0,
-                    marginBottom: '8px',
-                    color: 'var(--vortex-gray-900)',
-                    fontSize: 'var(--vortex-font-size-lg)'
-                  }}>
-                    Loading PropReports Dashboard
-                  </h3>
-                  <p style={{ 
-                    margin: 0,
-                    color: 'var(--vortex-gray-600)',
-                    fontSize: 'var(--vortex-font-size-sm)'
-                  }}>
-                    Establishing secure connection to your trading data...
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Content Container */}
-          {!isLoading && (
-            <div className="vortex-iframe-container">
-              <iframe
-                key={iframeKey}
-                src={`/.netlify/functions/proxy?session=${session?.token || ''}&path=/report.php`}
-                title="PropReports Dashboard"
-                onLoad={() => {
-                  setTimeout(() => setIsLoading(false), 1000);
-                  setError('');
-                }}
-                onError={() => {
-                  setIsLoading(false);
-                  setError('Failed to load PropReports content. Please try refreshing.');
-                }}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Modern Footer */}
-        <div className="vortex-text-center vortex-mt-8">
+        {/* Footer */}
+        <div className="vortex-text-center" style={{ marginTop: '60px' }}>
           <div style={{
-            background: 'rgba(255, 255, 255, 0.8)',
-            backdropFilter: 'blur(10px)',
+            background: 'var(--vortex-bg-card)',
+            border: '1px solid var(--vortex-border-primary)',
             padding: 'var(--vortex-spacing-4)',
             borderRadius: 'var(--vortex-radius-lg)',
-            border: '1px solid var(--vortex-gray-200)',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '16px'
@@ -265,13 +284,13 @@ const Dashboard = ({ session, onLogout }) => {
               </svg>
               <span style={{ 
                 fontSize: 'var(--vortex-font-size-sm)',
-                color: 'var(--vortex-gray-700)',
+                color: 'var(--vortex-text-primary)',
                 fontWeight: '600'
               }}>
                 Vortex Capital Group PropReports Portal
               </span>
             </div>
-            <span style={{ color: 'var(--vortex-gray-400)' }}>•</span>
+            <span style={{ color: 'var(--vortex-text-muted)' }}>•</span>
             <a 
               href="https://www.vortexcapitalgroup.com" 
               target="_blank" 
