@@ -38,6 +38,15 @@ const Login = ({ onLogin, isLoading }) => {
         <div className="vortex-card">
           {/* Modern Brand Header */}
           <div className="vortex-brand-header">
+            <img 
+              src="/vortex-logo.svg" 
+              alt="Vortex Capital Group" 
+              style={{ 
+                height: '60px', 
+                marginBottom: 'var(--vortex-spacing-4)',
+                filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.1))'
+              }}
+            />
             <h1 className="vortex-brand-title">
               Vortex Capital Group
             </h1>

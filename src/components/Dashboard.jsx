@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import PropReportsDashboard from './PropReportsDashboard';
+import TradingRecords from './TradingRecords';
 import '../styles/vortex-theme.css';
 
 const Dashboard = ({ session, onLogout }) => {
@@ -25,6 +25,15 @@ const Dashboard = ({ session, onLogout }) => {
           <div className="vortex-flex vortex-items-center vortex-justify-between">
             {/* Logo and Brand */}
             <div className="vortex-flex vortex-items-center">
+              <img 
+                src="/vortex-logo.svg" 
+                alt="Vortex Capital Group" 
+                style={{ 
+                  height: '40px', 
+                  marginRight: 'var(--vortex-spacing-4)',
+                  filter: 'drop-shadow(0 1px 4px rgba(0, 0, 0, 0.1))'
+                }}
+              />
               <div>
                 <h1 style={{ 
                   fontSize: 'var(--vortex-font-size-2xl)',
@@ -133,7 +142,7 @@ const Dashboard = ({ session, onLogout }) => {
       }}>
         {/* Tab Content */}
         {activeTab === 'reports' && (
-          <PropReportsDashboard session={session} />
+          <TradingRecords session={session} />
         )}
 
         {activeTab === 'search' && (

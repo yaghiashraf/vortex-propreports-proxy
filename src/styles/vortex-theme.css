@@ -86,9 +86,9 @@ body {
 
 /* Layout Components */
 .vortex-container {
-  max-width: 100%;
-  margin: 0 auto;
-  padding: 0 var(--vortex-spacing-6);
+  max-width: none;
+  margin: 0;
+  padding: 0 var(--vortex-spacing-4);
   width: 100%;
 }
 
@@ -353,7 +353,8 @@ body {
   overflow: hidden;
   box-shadow: var(--vortex-shadow-2xl);
   border: 1px solid var(--vortex-border-primary);
-  margin: var(--vortex-spacing-6);
+  margin: 0;
+  width: 100%;
 }
 
 /* PropReports Recreation Styles */
